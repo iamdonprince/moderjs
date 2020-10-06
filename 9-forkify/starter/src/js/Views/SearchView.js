@@ -6,9 +6,20 @@ export const clearInput = () => {
 };
 export const clearResultsList = () => {
   elements.resultList.innerHTML = "";
+  elements.searchResPages.innerHTML = "";
 };
 
-function limitRecipeTitle(title, limit = 17) {
+export const highlightSelected = (id) => {
+  const resultsArr = Array.from(document.querySelectorAll(".results__link"));
+  resultsArr.forEach((el) => {
+    el.classList.remove("results__link--active");
+  });
+  document
+    .querySelector(`.results__link[href*="${id}"]`)
+    .classList.add("results__link--active");
+};
+
+export function limitRecipeTitle(title, limit = 17) {
   if (title.length > limit) {
     const newTitleArr = [];
     let newTitle = title.split(" ");
@@ -49,8 +60,7 @@ const renderButtons = (page, numResults, resPerPage) => {
   } else if (page < pages) {
     //both button
     button = `
-    button = createButton(page, 'prev')
-    button = createButton(page, 'next')
+${createButton(page, "prev")}      ${createButton(page, "next")}
     
     `;
   } else if (page === pages && pages > 1) {
@@ -58,16 +68,19 @@ const renderButtons = (page, numResults, resPerPage) => {
     button = createButton(page, "prev");
   }
 
-  elements.searchResPages.insertAdjacentHTML("afterbegin", button);
+  if (button !== undefined) {
+    elements.searchResPages.insertAdjacentHTML("afterbegin", button);
+  }
 };
 
 export const renderResults = (recipes, page = 1, resPerPage = 10) => {
   const start = (page - 1) * resPerPage;
   const end = page * resPerPage;
 
-  recipes.slice(start, end).forEach((data) => {
-    const markup = `<li>
-    <a class="results__link results__link--active" href="${data.recipe_id}">
+  if (recipes.length > 0) {
+    recipes.slice(start, end).forEach((data) => {
+      const markup = `<li>
+    <a class="results__link" href="#${data.recipe_id}">
         <figure class="results__fig">
             <img src="${data.image_url}" alt="Test">
         </figure>
@@ -79,7 +92,12 @@ export const renderResults = (recipes, page = 1, resPerPage = 10) => {
     </a>
 </li>`;
 
-    elements.resultList.insertAdjacentHTML("beforeend", markup);
-  });
+      elements.resultList.insertAdjacentHTML("beforeend", markup);
+    });
+  } else {
+    let el = `<div class="error">Recipes not found</div>
+   `;
+    elements.resultList.insertAdjacentHTML("beforeend", el);
+  }
   renderButtons(page, recipes.length, resPerPage);
 };

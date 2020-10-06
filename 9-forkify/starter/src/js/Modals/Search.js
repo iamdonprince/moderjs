@@ -1,23 +1,22 @@
 import axios from "axios";
-
+import {proxy} from '../Config'
 class Search {
   constructor(query) {
     this.query = query;
   }
 
   async getSearchResults() {
-    const cors = "https://cors-anywhere.herokuapp.com/";
-
+ 
     //   fetch(`${cors}https://recipesapi.herokuapp.com/api/search?q=${query}`)
     //     .then((res) => res.json())
     //     .then((res) => console.log(res));
 
     try {
       const res = await axios.get(
-        `${cors}https://recipesapi.herokuapp.com/api/search?q=${this.query}`
+        `${proxy}https://recipesapi.herokuapp.com/api/search?q=${this.query}`
       );
       this.result = res.data.recipes;
-      console.log(res);
+         
     } catch (err) {
       console.log(err);
     }

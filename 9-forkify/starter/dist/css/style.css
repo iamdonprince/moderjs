@@ -447,7 +447,7 @@ body {
   .shopping__item {
     display: flex;
     align-items: flex-start;
-    padding: 1.3rem 0;
+    padding: 1.3rem 3px;
     border-bottom: 1px solid #F2EFEE;
     position: relative; }
   .shopping__count {
